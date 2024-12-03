@@ -1,0 +1,64 @@
+version: '3'
+
+services:
+  backendexercice_db:
+    image: mariadb:10.7-focal
+    container_name: backendexercice_db
+    restart: always
+    expose:
+      - 3306
+    
+    volumes:
+      - ${BACKENDEXERCICE_VOLUME}/db/data:/var/lib/mysql
+      - ${BACKENDEXERCICE_VOLUME}/db/encryption:/etc/mysql/encryption
+      - ./db/my.cnf:/etc/mysql/my.cnf
+
+    env_file:
+      - ./db/.env
+      
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -p$$MYSQL_ROOT_PASSWORD"]
+      timeout: 20s
+      retries: 3
+
+    networks:
+      - backendexercice-dev-net
+
+
+  backendexercice:
+    build:
+      context: ../
+      dockerfile: ./deploy/app/Dockerfile
+      args:
+        http_proxy: ${HTTP_PROXY}
+        https_proxy: ${HTTPS_PROXY}
+        no_proxy: ${NO_PROXY}
+
+    environment:
+      http_proxy: ${HTTP_PROXY}
+      https_proxy: ${HTTPS_PROXY}
+      no_proxy: ${NO_PROXY}
+    # command: tail -f /dev/null
+    image: backendexercice-dev
+    container_name: backendexercice
+    restart: always
+    volumes:
+      - ../backendexercice:/backendexercice
+      - ./app/.env:/backendexercice/.env
+      - ./app/gunicorn.dev.conf.py:/backendexercice/gunicorn.conf.py
+      - ${BACKENDEXERCICE_VOLUME}/backendexercice/log:/var/log/backendexercice
+      - ${BACKENDEXERCICE_VOLUME}/backendexercice/media:/media
+    
+    ports:
+      - 8080:8080
+
+    depends_on:
+      backendexercice_db:
+        condition: service_healthy
+
+    networks:
+      - backendexercice-dev-net
+
+networks:
+  backendexercice-dev-net:
+    driver: bridge

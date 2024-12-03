@@ -58,8 +58,8 @@ The file with environment variables is located in the subdirectory `deploy`. Use
 
 ## API documentation
 
-All endpoints available (except `/health` and `token`) have `get`, `post`, `patch` and `delete` verbs:
-- `/token` to refresh the the jwt token for the current user(only users with `admin` role can perform actions)
+All endpoints available (except `/health`,`token`,`user` and `admin`) have `get`, `post`, `patch` and `delete` verbs:
+- `/token` to refresh the the jwt token for the current user((anyone can perform thisaction)
   - `post`
 - `/health` to check whether the api is healthy (anyone can perform actions)
   - `get`

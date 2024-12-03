@@ -14,7 +14,12 @@ The file with environment variables is located in the subdirectory `deploy`. Use
 
 - Do not forget to setup proxy variables if you're behind a proxy server
 
-## Build
+## Pre deploy
+Execute the pre_deploy shell file to prepare the volumes:
+- got ot deploy folder and execute:
+- `sh ./prepare_deploy`
+
+- ## Build
 
 - Access the subdirectory `deploy` from Backend Exercice root directory and execute:
  

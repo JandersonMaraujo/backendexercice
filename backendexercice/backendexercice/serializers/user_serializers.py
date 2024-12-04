@@ -7,7 +7,7 @@ User = get_user_model()
 class CommonUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        exclude = ['password']
     
     def validate(self, data):
         password = data.pop('password', None)
@@ -21,4 +21,4 @@ class CommonUserSerializer(serializers.ModelSerializer):
 class AdminUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        exclude = ['password']
